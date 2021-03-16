@@ -1,32 +1,31 @@
 import telebot
 from telebot import types
 
-bot = telebot.TeleBot('1656161614:AAEpFdJfVTZAyoW4xdNSLwkCSHkMQvansgY')
+bot = telebot.TeleBot('1740841113:AAESpLnLF5v-23dVnhen5l6nhvvybIB8O0Y')
 
 name = ''
 surname = ''
 age = 0
+sex = ''
+city = ''
 
 
 @bot.message_handler(content_types=['text', 'picture'])
 def start(message):
-    if message.text == '/start':
+    if message.text == 'Привет':
+        bot.send_message(message.from_user.id, "Привет! Меня зовут Meet&Greet. Я открою тебе мир новых знакомств."
+                                               "Но чтобы начать начать, мне нужно узнать у тебя некоторое количество "
+                                               "данных.")
+        bot.send_message(message.from_user.id, "Итак, начнем!")
         bot.send_message(message.from_user.id, "Как тебя зовут?")
         bot.register_next_step_handler(message, get_name)  # следующий шаг – функция get_name
     else:
-        bot.send_message(message.from_user.id, 'Напиши /reg')
+        bot.send_message(message.from_user.id, 'Напиши Привет')
 
 
 def get_name(message):  # получаем фамилию
     global name
     name = message.text
-    bot.send_message(message.from_user.id, 'Какая у тебя фамилия?')
-    bot.register_next_step_handler(message, get_surname)
-
-
-def get_surname(message):
-    global surname
-    surname = message.text
     bot.send_message(message.from_user.id, 'Сколько тебе лет?')
     bot.register_next_step_handler(message, get_age)
 
@@ -38,14 +37,26 @@ def get_age(message):
             age = int(message.text)  # проверяем, что возраст введен корректно
         except Exception:
             bot.send_message(message.from_user.id, 'Цифрами, пожалуйста')
+    bot.send_message(message.from_user.id, 'А какой у тебя пол?')
+    bot.register_next_step_handler(message, get_sex)
+
+
+def get_sex(message):
+    global sex
     keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
-    key_yes = types.InlineKeyboardButton(text='Да', callback_data='yes')  # кнопка «Да»
-    keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
-    key_no = types.InlineKeyboardButton(text='Нет', callback_data='no')
-    keyboard.add(key_no)
-    question = 'Тебе ' + str(age) + ' лет, тебя зовут ' + name + ' ' + surname + '?'
+    key_male = types.InlineKeyboardButton(text='М', callback_data='male')  # кнопка «Да»
+    keyboard.add(key_male)  # добавляем кнопку в клавиатуру
+    key_female = types.InlineKeyboardButton(text='Ж', callback_data='female')
+    keyboard.add(key_female)
+    bot.send_message(message.from_user.id, 'А какой у тебя пол?')
+    bot.register_next_step_handler(message, get_sex)
+    question = 'Тебе ' + str(age) + ' лет, тебя зовут ' + name + ' ' + '?'
     bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
 
+
+def get_city(message):
+    global city
+    name = message.text
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_worker(call):
