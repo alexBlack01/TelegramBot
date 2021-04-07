@@ -1,7 +1,7 @@
 import telebot
 from telebot import types
 import config
-import Registration
+import registration
 import re
 
 bot = telebot.TeleBot(token=config.TOKEN)
@@ -39,7 +39,7 @@ def check_resolution(message):
        bot.send_message(message.from_user.id, 'Отлично!')
        bot.send_message(message.from_user.id, "Итак, начнем!")
        bot.send_message(message.from_user.id, "Как тебя зовут?")
-       bot.register_next_step_handler(message, Registration.get_name)
+       bot.register_next_step_handler(message, registration.get_name)
    elif message.text == 'Запрещаю':
        bot.send_message(message.from_user.id, 'Прости, но тогда я не смогу тебе помочь со знакомствами!')
        bot.send_message(message.from_user.id, "Ты разрешаешь обработку персональных данных?")
