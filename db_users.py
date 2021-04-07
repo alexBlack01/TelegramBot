@@ -1,11 +1,11 @@
 import pymongo
 from pymongo import MongoClient
+from config import MONGODB_LINK
+from config import MONGO_DB
 import config
 import user
 
-client = MongoClient('localhost', 27017)
-
-db = client['meet_and_greet_db']
+db = MongoClient(MONGODB_LINK)[MONGO_DB]
 
 def check_and_add_user(cur_user: user.User()):
     if db.users.find_one({'user_id': user.id}) is None:
