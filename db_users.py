@@ -1,21 +1,22 @@
 import pymongo
 from pymongo import MongoClient
 import config
+import user
 
 client = MongoClient('localhost', 27017)
 
 db = client['meet_and_greet_db']
 
-def check_and_add_user(message):
-    if db.users.find_one({'user_id': message.from_user.id}) is None:
+def check_and_add_user(user: user.User()):
+    if db.users.find_one({'user_id': user.id}) is None:
         new_user = {
-            'user_id': message.from_user.id,
-            'name': message.from_user.first_name,
-            'age': message.from_user.last_name,
-            'sex': message.from_user.id,
-            'city': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'photo': message.from_user.id
-            'state': 'старт'
+            'user_id': user.id,
+            'name': user.name,
+            'age': user.age,
+            'sex': user.sex,
+            'city': user.city,
+            'photo': user.photo,
+            'state': user.state
         }
         db.users.insert_one(new_user)
     return
