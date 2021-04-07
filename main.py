@@ -16,12 +16,18 @@ def is_greeting(message):
             return True
     return False
 
+start_message = {
+    u'Привет! Меня зовут Meet&Greet. Я открою тебе мир новых знакомств.\n'
+    u'Но чтобы начать, мне нужно узнать у тебя некоторое количество данных.\n'
+    u'Однако я не могу обрабатывать твои данные без твоего согласия.\n'
+}
+
 @bot.message_handler(content_types = ['text'])
 def start(message):
     if is_greeting(message.text):
-        bot.send_message(message.from_user.id, "Привет! Меня зовут Meet&Greet. Я открою тебе мир новых знакомств."
-                                               "Но чтобы начать, мне нужно узнать у тебя некоторое количество данных.")
-        bot.send_message(message.from_user.id, "Однако я не могу обрабатывать твои данные без твоего согласия.")
+        bot.send_message(message.from_user.id, start_message)
+
+        bot.send_message(message.from_user.id, 'Ты разрешаешь обработку персональных данных?')
 
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         key_yes = types.KeyboardButton(text='Разрешаю')
