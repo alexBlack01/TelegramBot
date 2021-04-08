@@ -69,7 +69,6 @@ def get_photo(message):
     with open(src, 'wb') as new_file:
         new_file.write(downloaded_file)
 
-
 def add_user_in_db(message):
     db_users.check_and_add_user(user)
     bot.send_message(message.from_user.id, 'Спасибо за регистрацию!')

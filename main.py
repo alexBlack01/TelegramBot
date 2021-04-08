@@ -3,6 +3,7 @@ from telebot import types
 import config
 import registration
 import re
+import db_users
 
 bot = telebot.TeleBot(token=config.TOKEN)
 
@@ -42,6 +43,10 @@ def start(message):
 
 def check_resolution(message):
    if message.text == 'Разрешаю':
+
+       db_users.check_and_add_user(message)
+       db_users.set_state(message.from_user.id, config.S_GET_NAME)
+
        bot.send_message(message.from_user.id, 'Отлично!')
        bot.send_message(message.from_user.id, "Итак, начнем!")
        bot.send_message(message.from_user.id, "Как тебя зовут?")
@@ -50,7 +55,6 @@ def check_resolution(message):
        bot.send_message(message.from_user.id, 'Прости, но тогда я не смогу тебе помочь со знакомствами!')
        bot.send_message(message.from_user.id, "Ты разрешаешь обработку персональных данных?")
        bot.register_next_step_handler(message, check_resolution)
-
 
 bot.polling(none_stop=True)
 
