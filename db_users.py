@@ -36,6 +36,21 @@ def save_user_form(cur_user: user.User()):
     )
     return user
 
+#def save_addition_info(cur_user: user.User()):
+#    db.users.update_one(
+#        {'user_id': cur_user.id},
+#        {'$set': {'addition_info': {'name': cur_user.name,
+#                            'age': cur_user.age,
+#                            'sex': cur_user.sex,
+#                            'city': cur_user.city,
+#                            'photo': cur_user.photo,
+#                            'state': cur_user.state
+#                             }
+#                  }
+#         }
+#    )
+#    return user
+
 def get_current_state(user_id):
     cur_user = db.users.find_one({'user_id': user_id})
     return cur_user['state']
