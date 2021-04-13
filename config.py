@@ -1,4 +1,4 @@
-TOKEN = '1740841113:AAF6aI_J0nTWhfmyW7UY6z4ZOEu2NpQRUqw'
+TOKEN = '1740841113:AAGGcG90GKOuEcIYSBB-TeyKZjnxelL8J4c'
 
 MONGODB_LINK = 'mongodb+srv://telegrambot:Lp3-YvL-DSV-id2@telegrambot.a2vaw.mongodb.net/users_tm_bot?retryWrites=true&w=majority'
 MONGO_DB = 'users_tm_bot'

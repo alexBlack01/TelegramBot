@@ -1,8 +1,7 @@
-import logging
 from aiogram import Dispatcher, types, Bot
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+
 import config
 import db_users
 import main
@@ -76,22 +75,20 @@ async def get_city(message: types.Message):
     city = message.text
     user.set_city(city)
 
-    await message.answer('Отсалось только загрузить фото')
+    await message.answer('Осталось только загрузить фото')
     await StageRegistration.waiting_for_photo.set()
 
 
-@dp.message_handler(content_types=['document'])
-async def get_photo(message):
-    #file_info = dp.get_file(message.document.file_id)
-    #downloaded_file = bot.download_file(file_info.file_path)
+async def get_photo(message: types.Message):
+    await message.photo[-1].download()
+    file_name = message.photo[-1].file_unique_id
+    src = file_name
 
-    #src = 'C:\\Users\\asfsa\\Repository\\PI\\TelegramBot\\photos\\' + message.document.file_name
-    #with open(src, 'wb') as new_file:
-    #    new_file.write(downloaded_file)
-
-    #user.set_photo(src)
+    # src = 'C:\\Users\\asfsa\\Repository\\PI\\TelegramBot\\photos\\' + message.document.file_name
+    user.set_photo(src)
 
     db_users.save_user_form(user)
     db_users.set_state(user.id, config.S_MENU)
 
+    await message.answer('Спасибо за регистрацию!')
     await main.base_menu(message)

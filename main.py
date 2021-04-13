@@ -39,18 +39,18 @@ def is_greeting(message) -> bool:
 
 
 async def say_hello(message: types.Message):
-    await message.answer('Поздоровайся')
+    await message.answer('Привет!')
     await StageBot.waiting_for_check_hello.set()
 
 
 async def check_hello(message: types.Message):
     if is_greeting(message.text):
-        await message.answer('Привет! Меня зовут Meet&Greet. Я открою тебе мир новых знакомств. '
+        await message.answer('Меня зовут Meet&Greet. Я открою тебе мир новых знакомств. '
                              'Но чтобы начать, мне нужно узнать у тебя некоторое количество данных.'
                              'Однако я не могу обрабатывать твои данные без твоего согласия.')
         await check_resolution(message)
     else:
-        await message.answer('Напиши Привет')
+        await message.answer('Напиши: "Привет"')
         return
 
 
@@ -66,7 +66,8 @@ async def choose_check_resolution(message: types.Message):
     if message.text not in keys_for_resolution:
         await message.answer("Пожалуйста, выберите варинат, используя клавиатуру ниже.")
         return
-    if message.text == 'Разрешаю':
+
+    elif message.text == 'Разрешаю':
         db_users.check_and_add_user(message)
 
         await message.answer('Отлично!', reply_markup=types.ReplyKeyboardRemove())
@@ -97,7 +98,8 @@ def register_handlers_bot(dp: Dispatcher):
     dp.register_message_handler(registration.get_sex, state=registration.StageRegistration.waiting_for_sex)
     dp.register_message_handler(registration.sex_chosen, state=registration.StageRegistration.waiting_for_sex_chosen)
     dp.register_message_handler(registration.get_city, state=registration.StageRegistration.waiting_for_city)
-    dp.register_message_handler(registration.get_photo, state=registration.StageRegistration.waiting_for_photo)
+    dp.register_message_handler(registration.get_photo, state=registration.StageRegistration.waiting_for_photo,
+                                content_types=[types.ContentType.PHOTO])
     dp.register_message_handler(base_menu, state=StageBot.waiting_for_base_menu)
 
 
