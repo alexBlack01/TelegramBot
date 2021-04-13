@@ -90,5 +90,13 @@ async def get_photo(message: types.Message):
     db_users.save_user_form(user)
     db_users.set_state(user.id, config.S_MENU)
 
-    await message.answer('Спасибо за регистрацию!')
+    await say_info(message)
+
+
+async def say_info(message: types.Message):
+    await message.answer('Основная регистрация профиля завершина!\n\n'
+                         'Однако, чтобы воспользоваться дополнительными функциями поиска друзей, стоит пройти '
+                         'дополнительную регистрацию.\n Ее можно пройти в любое время, когда тебе удобно.\n'
+                         'Пока что тебе будет доступен просмотр всех анкет.')
+
     await main.base_menu(message)

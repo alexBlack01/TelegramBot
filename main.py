@@ -45,8 +45,9 @@ async def say_hello(message: types.Message):
 
 async def check_hello(message: types.Message):
     if is_greeting(message.text):
-        await message.answer('Меня зовут Meet&Greet. Я открою тебе мир новых знакомств. '
-                             'Но чтобы начать, мне нужно узнать у тебя некоторое количество данных.'
+        await message.answer('Меня зовут <b>Meet&Greet</b>.\n\n'
+                             'Я открою тебе мир новых знакомств.\n'
+                             'Но чтобы начать, мне нужно узнать у тебя некоторое количество данных.\n'
                              'Однако я не могу обрабатывать твои данные без твоего согласия.')
         await check_resolution(message)
     else:
@@ -83,7 +84,7 @@ async def choose_check_resolution(message: types.Message):
 
 
 async def base_menu(message: types.Message):
-    await message.answer('Спасибо за регистрацию!')
+    await message.answer('Основное меню')
 
 
 def register_handlers_bot(dp: Dispatcher):
@@ -104,7 +105,7 @@ def register_handlers_bot(dp: Dispatcher):
 
 
 async def main():
-    bot = Bot(token=config.TOKEN)
+    bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
     dp = Dispatcher(bot, storage=MemoryStorage())
 
     register_handlers_bot(dp)
