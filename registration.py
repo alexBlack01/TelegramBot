@@ -6,13 +6,12 @@ import config
 import db_users
 import main
 import user
+import keyboards
 
 bot = Bot(token=config.TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 user = user.User()
-
-val_sex = ['М', 'Ж']
 
 
 class StageRegistration(StatesGroup):
@@ -53,14 +52,14 @@ async def get_age(message: types.Message):
 
 async def get_sex(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(*val_sex)
+    keyboard.add(*keyboards.keys_for_sex)
 
     await message.answer('А какой у тебя пол?', reply_markup=keyboard)
     await StageRegistration.waiting_for_sex_chosen.set()
 
 
 async def sex_chosen(message: types.Message):
-    if message.text not in val_sex:
+    if message.text not in keyboards.keys_for_sex:
         await message.answer("Пожалуйста, выберите пол, используя клавиатуру ниже.")
         await StageRegistration.waiting_for_sex_chosen.set()
     else:

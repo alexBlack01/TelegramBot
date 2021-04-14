@@ -1,25 +1,20 @@
 import asyncio
-import logging
 import re
-from typing import Set
 
-from aiogram import Bot, Dispatcher, executor, types
-
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.types import BotCommand
-
+import extra_registration
+import handlers
+import keyboards
 import config
 import registration
 import db_users
 
-logger = logging.getLogger(__name__)
+from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.filters.state import StatesGroup, State
 
 greetings = [r'\b[П, п]р.в', r'[Х, х][а, э, е][ю, й]\D*', r'Даров?', r'\D*д.ров?',
              r'\D*дра\D*т?у?те', r'[К, к]у', r'[Й, й]оу', r'[Д, д]обрый день',
              r'[Д, д]оброе утро', r'[Д, д]обрый вечер', r'[П, п]ис', r'\D*[С, с]алам\D*']
-
-keys_for_resolution = ['Разрешаю', 'Запрещаю']
 
 
 class StageBot(StatesGroup):
@@ -57,14 +52,14 @@ async def check_hello(message: types.Message):
 
 async def check_resolution(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.row(*keys_for_resolution)
+    keyboard.row(*keyboards.keys_for_resolution)
 
     await message.answer('Ты разрешаешь обработку персональных данных?', reply_markup=keyboard)
     await StageBot.waiting_for_choose_check_resolution.set()
 
 
 async def choose_check_resolution(message: types.Message):
-    if message.text not in keys_for_resolution:
+    if message.text not in keyboards.keys_for_resolution:
         await message.answer("Пожалуйста, выберите варинат, используя клавиатуру ниже.")
         return
 
@@ -84,31 +79,32 @@ async def choose_check_resolution(message: types.Message):
 
 
 async def base_menu(message: types.Message):
-    await message.answer('Основное меню')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    for i in range(4):
+        keyboard.row(f'{i + 1}')
+
+    await message.answer('Основное меню:\n\n'
+                         '1 - Начать поиск\n'
+                         '2 - Выбрать поиск\n'
+                         '3 - Пройти дополнительную регистрацию\n'
+                         '4 - Удалить анкету\n', reply_markup=keyboard)
+
+    await StageBot.waiting_for_base_menu.set()
 
 
-def register_handlers_bot(dp: Dispatcher):
-    dp.register_message_handler(say_hello, commands='start', state='*')
-    dp.register_message_handler(check_hello, state=StageBot.waiting_for_check_hello)
-    dp.register_message_handler(check_resolution, state=StageBot.waiting_for_check_resolution)
-    dp.register_message_handler(choose_check_resolution, state=StageBot.waiting_for_choose_check_resolution)
-    dp.register_message_handler(registration.registration,
-                                state=registration.StageRegistration.waiting_for_registration)
-    dp.register_message_handler(registration.get_name, state=registration.StageRegistration.waiting_for_name)
-    dp.register_message_handler(registration.get_age, state=registration.StageRegistration.waiting_for_age)
-    dp.register_message_handler(registration.get_sex, state=registration.StageRegistration.waiting_for_sex)
-    dp.register_message_handler(registration.sex_chosen, state=registration.StageRegistration.waiting_for_sex_chosen)
-    dp.register_message_handler(registration.get_city, state=registration.StageRegistration.waiting_for_city)
-    dp.register_message_handler(registration.get_photo, state=registration.StageRegistration.waiting_for_photo,
-                                content_types=[types.ContentType.PHOTO])
-    dp.register_message_handler(base_menu, state=StageBot.waiting_for_base_menu)
+async def choose_base_menu(message: types.Message):
+    if message.text == '3':
+        await extra_registration.extra_registration(message)
+    else:
+        await message.answer('Остальные функции пока что не готовы!')
+        return
 
 
 async def main():
     bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
     dp = Dispatcher(bot, storage=MemoryStorage())
 
-    register_handlers_bot(dp)
+    handlers.register_handlers_bot(dp)
 
     await dp.start_polling()
 
