@@ -43,11 +43,15 @@ async def get_age(message: types.Message):
     age = message.text
     if not age.isdigit():
         await message.answer('Возраст должен быть цифрами, введите заново')
-        await StageRegistration.waiting_for_age.set()
+        return
     else:
         age = int(age)
-        user.set_age(age)
-        await get_sex(message)
+        if age <= 0 or age > 80:
+            await message.answer('Столько люди не живут!')
+            return
+        else:
+            user.set_age(age)
+            await get_sex(message)
 
 
 async def get_sex(message: types.Message):
@@ -95,7 +99,8 @@ async def get_photo(message: types.Message):
 async def say_info(message: types.Message):
     await message.answer('Основная регистрация профиля завершина!\n\n'
                          'Однако, чтобы воспользоваться дополнительными функциями поиска друзей, стоит пройти '
-                         'дополнительную регистрацию.\n Ее можно пройти в любое время, когда тебе удобно.\n'
+                         'дополнительную регистрацию.\n'
+                         'Это можно сделать в любое время, когда тебе удобно.\n'
                          'Пока что тебе будет доступен просмотр всех анкет.')
 
     await main.base_menu(message)

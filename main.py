@@ -63,7 +63,7 @@ async def choose_check_resolution(message: types.Message):
         await message.answer("Пожалуйста, выберите варинат, используя клавиатуру ниже.")
         return
 
-    elif message.text == 'Разрешаю':
+    elif message.text == keyboards.keys_for_resolution[0]:
         db_users.check_and_add_user(message)
 
         await message.answer('Отлично!', reply_markup=types.ReplyKeyboardRemove())
@@ -72,7 +72,7 @@ async def choose_check_resolution(message: types.Message):
         db_users.set_state(message.from_user.id, config.S_REGISTRATION)
         await registration.registration(message)
 
-    elif message.text == 'Запрещаю':
+    elif message.text == keyboards.keys_for_resolution[1]:
         await message.answer('Прости, но тогда я не смогу тебе помочь со знакомствами!')
         await message.answer('Ты разрешаешь обработку персональных данных?')
         return
@@ -83,7 +83,7 @@ async def base_menu(message: types.Message):
     for i in range(4):
         keyboard.row(f'{i + 1}')
 
-    await message.answer('Основное меню:\n\n'
+    await message.answer('Основное меню:\n'
                          '1 - Начать поиск\n'
                          '2 - Выбрать поиск\n'
                          '3 - Пройти дополнительную регистрацию\n'
