@@ -91,9 +91,10 @@ async def choose_music_info(message: types.Message):
     if message.text in keyboards.keys_music:
         if message.text not in user.music:
             user.set_music(message.text)
-            await StageExtraRegistration.waiting_for_get_music_info.set()
 
-    if message.text == keyboards.key_save_and_cancel[1]:
+        await StageExtraRegistration.waiting_for_get_music_info.set()
+
+    elif message.text == keyboards.key_save_and_cancel[1]:
         await extra_registration(message)
 
     else:
@@ -105,7 +106,7 @@ async def get_movie_info(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     for i in range(3):
         keyboard.row(keyboards.keys_movie[3 * i], keyboards.keys_movie[3 * i + 1], keyboards.keys_movie[3 * i + 2])
-    keyboard.add(keyboards.key_save_and_cancel[1])
+    keyboard.add(*keyboards.key_save_and_cancel)
 
     await message.answer(emojize('Выбери жанры кино, которые любишь:\n'
                                  f'{keyboards.keys_movie[0]} - Хоррор\n'
@@ -128,9 +129,10 @@ async def choose_movie_info(message: types.Message):
     if message.text in keyboards.keys_movie:
         if message.text not in user.movie:
             user.set_movie(message.text)
-            await StageExtraRegistration.waiting_for_get_movie_info.set()
 
-    if message.text == keyboards.key_save_and_cancel[1]:
+        await StageExtraRegistration.waiting_for_get_movie_info.set()
+
+    elif message.text == keyboards.key_save_and_cancel[1]:
         await extra_registration(message)
 
     else:
@@ -154,11 +156,11 @@ async def get_sex_info(message: types.Message):
 
 
 async def choose_sex_info(message: types.Message):
-    if message.text in keyboards.keys_for_sex or keyboards.key_no_sex:
+    if message.text in keyboards.keys_for_sex or message.text in keyboards.key_no_sex:
         user.set_sex(message.text)
         await StageExtraRegistration.waiting_for_get_sex_info.set()
 
-    if message.text == keyboards.key_save_and_cancel[1]:
+    elif message.text == keyboards.key_save_and_cancel[1]:
         await extra_registration(message)
 
     else:
@@ -195,9 +197,10 @@ async def choose_zodiac_info(message: types.Message):
     if message.text in keyboards.keys_zodiac:
         if message.text not in user.zodiac:
             user.set_zodiac(message.text)
-            await StageExtraRegistration.waiting_for_get_movie_info.set()
 
-    if message.text == keyboards.key_save_and_cancel[1]:
+        await StageExtraRegistration.waiting_for_get_zodiac_info.set()
+
+    elif message.text == keyboards.key_save_and_cancel[1]:
         await extra_registration(message)
 
     else:
@@ -223,7 +226,7 @@ async def choose_age_range_info(message: types.Message):
             await message.answer('Возраст должен быть цифрами, введите заново')
             return
     else:
-        if user.age_range.count() != 2:
+        if user.age_range.__len__() != 2:
             user.set_age_range(message.text)
             await StageExtraRegistration.waiting_for_get_age_range_info.set()
         else:
