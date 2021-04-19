@@ -36,20 +36,60 @@ def save_user_form(cur_user: user.User()):
     return
 
 
-# def save_addition_info(cur_user: user.User()):
-#    db.users.update_one(
-#        {'user_id': cur_user.id},
-#        {'$set': {'addition_info': {'name': cur_user.name,
-#                            'age': cur_user.age,
-#                            'sex': cur_user.sex,
-#                            'city': cur_user.city,
-#                            'photo': cur_user.photo,
-#                            'state': cur_user.state
-#                             }
-#                  }
-#         }
-#    )
-#    return user
+def save_music_info(cur_user: user.UserExtra()):
+    db.users.update_one(
+        {'user_id': cur_user.id},
+        {'$set': {'addition_info': {'music': cur_user.music
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_movie_info(cur_user: user.UserExtra()):
+    db.users.update_one(
+        {'user_id': cur_user.id},
+        {'$set': {'addition_info': {'movie': cur_user.movie
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_sex_info(cur_user: user.UserExtra()):
+    db.users.update_one(
+        {'user_id': cur_user.id},
+        {'$set': {'addition_info': {'sex': cur_user.sex
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_zodiac_info(cur_user: user.UserExtra()):
+    db.users.update_one(
+        {'user_id': cur_user.id},
+        {'$set': {'addition_info': {'zodiac': cur_user.zodiac
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_age_range_info(cur_user: user.UserExtra()):
+    db.users.update_one(
+        {'user_id': cur_user.id},
+        {'$set': {'addition_info': {'age_range': cur_user.age_range
+                                    }
+                  }
+         }
+    )
+    return
+
 
 def get_current_state(user_id):
     cur_user = db.users.find_one({'user_id': user_id})
