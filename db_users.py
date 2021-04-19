@@ -7,9 +7,17 @@ import user
 db = MongoClient(MONGODB_LINK)[MONGO_DB]
 
 
+def check_user(user_id):
+    cur_user = db.users.find_one({'user_id': user_id})
+    if cur_user is None:
+        return False
+    else:
+        return True
+
+
 def check_and_add_user(message):
-    user = db.users.find_one({'user_id': message.from_user.id})
-    if user is None:
+    cur_user = db.users.find_one({'user_id': message.from_user.id})
+    if cur_user is None:
         new_user = {
             'user_id': message.from_user.id,
             'first_name': message.from_user.first_name,
@@ -36,9 +44,9 @@ def save_user_form(cur_user: user.User()):
     return
 
 
-def save_music_info(cur_user: user.UserExtra()):
+def save_music_info(user_id, cur_user: user.UserExtra()):
     db.users.update_one(
-        {'user_id': cur_user.id},
+        {'user_id': user_id},
         {'$set': {'addition_info': {'music': cur_user.music
                                     }
                   }
@@ -47,9 +55,9 @@ def save_music_info(cur_user: user.UserExtra()):
     return
 
 
-def save_movie_info(cur_user: user.UserExtra()):
+def save_movie_info(user_id, cur_user: user.UserExtra()):
     db.users.update_one(
-        {'user_id': cur_user.id},
+        {'user_id': user_id},
         {'$set': {'addition_info': {'movie': cur_user.movie
                                     }
                   }
@@ -58,9 +66,9 @@ def save_movie_info(cur_user: user.UserExtra()):
     return
 
 
-def save_sex_info(cur_user: user.UserExtra()):
+def save_sex_info(user_id, cur_user: user.UserExtra()):
     db.users.update_one(
-        {'user_id': cur_user.id},
+        {'user_id': user_id},
         {'$set': {'addition_info': {'sex': cur_user.sex
                                     }
                   }
@@ -69,9 +77,9 @@ def save_sex_info(cur_user: user.UserExtra()):
     return
 
 
-def save_zodiac_info(cur_user: user.UserExtra()):
+def save_zodiac_info(user_id, cur_user: user.UserExtra()):
     db.users.update_one(
-        {'user_id': cur_user.id},
+        {'user_id': user_id},
         {'$set': {'addition_info': {'zodiac': cur_user.zodiac
                                     }
                   }
@@ -80,9 +88,9 @@ def save_zodiac_info(cur_user: user.UserExtra()):
     return
 
 
-def save_age_range_info(cur_user: user.UserExtra()):
+def save_age_range_info(user_id, cur_user: user.UserExtra()):
     db.users.update_one(
-        {'user_id': cur_user.id},
+        {'user_id': user_id},
         {'$set': {'addition_info': {'age_range': cur_user.age_range
                                     }
                   }

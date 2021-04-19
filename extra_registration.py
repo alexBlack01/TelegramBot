@@ -3,6 +3,7 @@ import keyboards
 import main
 import user
 from emoji import emojize
+import db_users
 
 from aiogram import Dispatcher, types, Bot
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -94,7 +95,10 @@ async def choose_music_info(message: types.Message):
 
         await StageExtraRegistration.waiting_for_get_music_info.set()
 
-    elif message.text == keyboards.key_save_and_cancel[1]:
+    elif message.text in keyboards.key_save_and_cancel:
+        if message.text == keyboards.key_save_and_cancel[0]:
+            db_users.save_movie_info(message.from_user.id, user.music)
+
         await extra_registration(message)
 
     else:
@@ -132,7 +136,10 @@ async def choose_movie_info(message: types.Message):
 
         await StageExtraRegistration.waiting_for_get_movie_info.set()
 
-    elif message.text == keyboards.key_save_and_cancel[1]:
+    elif message.text in keyboards.key_save_and_cancel:
+        if message.text == keyboards.key_save_and_cancel[0]:
+            db_users.save_movie_info(message.from_user.id, user.movie)
+
         await extra_registration(message)
 
     else:
@@ -160,7 +167,10 @@ async def choose_sex_info(message: types.Message):
         user.set_sex(message.text)
         await StageExtraRegistration.waiting_for_get_sex_info.set()
 
-    elif message.text == keyboards.key_save_and_cancel[1]:
+    elif message.text in keyboards.key_save_and_cancel:
+        if message.text == keyboards.key_save_and_cancel[0]:
+            db_users.save_sex_info(message.from_user.id, user.sex)
+
         await extra_registration(message)
 
     else:
@@ -200,7 +210,10 @@ async def choose_zodiac_info(message: types.Message):
 
         await StageExtraRegistration.waiting_for_get_zodiac_info.set()
 
-    elif message.text == keyboards.key_save_and_cancel[1]:
+    elif message.text in keyboards.key_save_and_cancel:
+        if message.text == keyboards.key_save_and_cancel[0]:
+            db_users.save_zodiac_info(message.from_user.id, user.zodiac)
+
         await extra_registration(message)
 
     else:
@@ -220,7 +233,10 @@ async def get_age_range_info(message: types.Message):
 
 async def choose_age_range_info(message: types.Message):
     if not message.text.isdigit():
-        if message.text == keyboards.key_save_and_cancel[1]:
+        if message.text in keyboards.key_save_and_cancel:
+            if message.text == keyboards.key_save_and_cancel[0]:
+                db_users.save_zodiac_info(message.from_user.id, user.zodiac)
+
             await extra_registration(message)
         else:
             await message.answer('Возраст должен быть цифрами, введите заново')
