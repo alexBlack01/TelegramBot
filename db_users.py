@@ -44,10 +44,10 @@ def save_user_form(cur_user: user.User()):
     return
 
 
-def save_music_info(user_id, cur_user: user.UserExtra()):
+def save_music_info(user_id, music):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'music': cur_user.music
+        {'$set': {'addition_info': {'music': music
                                     }
                   }
          }
@@ -55,10 +55,10 @@ def save_music_info(user_id, cur_user: user.UserExtra()):
     return
 
 
-def save_movie_info(user_id, cur_user: user.UserExtra()):
+def save_movie_info(user_id, movie):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'movie': cur_user.movie
+        {'$set': {'addition_info': {'movie': movie
                                     }
                   }
          }
@@ -66,10 +66,10 @@ def save_movie_info(user_id, cur_user: user.UserExtra()):
     return
 
 
-def save_sex_info(user_id, cur_user: user.UserExtra()):
+def save_sex_info(user_id, sex):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'sex': cur_user.sex
+        {'$set': {'addition_info': {'sex': sex
                                     }
                   }
          }
@@ -77,10 +77,10 @@ def save_sex_info(user_id, cur_user: user.UserExtra()):
     return
 
 
-def save_zodiac_info(user_id, cur_user: user.UserExtra()):
+def save_zodiac_info(user_id, zodiac):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'zodiac': cur_user.zodiac
+        {'$set': {'addition_info': {'zodiac': zodiac
                                     }
                   }
          }
@@ -88,10 +88,10 @@ def save_zodiac_info(user_id, cur_user: user.UserExtra()):
     return
 
 
-def save_age_range_info(user_id, cur_user: user.UserExtra()):
+def save_age_range_info(user_id, age_range):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'age_range': cur_user.age_range
+        {'$set': {'addition_info': {'age_range': age_range
                                     }
                   }
          }

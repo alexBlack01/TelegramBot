@@ -97,7 +97,7 @@ async def choose_music_info(message: types.Message):
 
     elif message.text in keyboards.key_save_and_cancel:
         if message.text == keyboards.key_save_and_cancel[0]:
-            db_users.save_movie_info(message.from_user.id, user.music)
+            db_users.save_music_info(message.from_user.id, user.music)
 
         await extra_registration(message)
 
@@ -235,7 +235,7 @@ async def choose_age_range_info(message: types.Message):
     if not message.text.isdigit():
         if message.text in keyboards.key_save_and_cancel:
             if message.text == keyboards.key_save_and_cancel[0]:
-                db_users.save_zodiac_info(message.from_user.id, user.zodiac)
+                await db_users.save_zodiac_info(message.from_user.id, user.zodiac)
 
             await extra_registration(message)
         else:

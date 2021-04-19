@@ -34,8 +34,11 @@ def is_greeting(message) -> bool:
 
 
 async def say_hello(message: types.Message):
-    await message.answer('Привет!')
-    await StageBot.waiting_for_check_hello.set()
+    if db_users.check_user(message.from_user.id):
+        await base_menu(message)
+    else:
+        await message.answer('Привет!')
+        await StageBot.waiting_for_check_hello.set()
 
 
 async def check_hello(message: types.Message):
