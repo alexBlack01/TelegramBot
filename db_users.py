@@ -7,9 +7,17 @@ import user
 db = MongoClient(MONGODB_LINK)[MONGO_DB]
 
 
+def check_user(user_id):
+    cur_user = db.users.find_one({'user_id': user_id})
+    if cur_user is None:
+        return False
+    else:
+        return True
+
+
 def check_and_add_user(message):
-    user = db.users.find_one({'user_id': message.from_user.id})
-    if user is None:
+    cur_user = db.users.find_one({'user_id': message.from_user.id})
+    if cur_user is None:
         new_user = {
             'user_id': message.from_user.id,
             'first_name': message.from_user.first_name,
@@ -36,20 +44,60 @@ def save_user_form(cur_user: user.User()):
     return
 
 
-# def save_addition_info(cur_user: user.User()):
-#    db.users.update_one(
-#        {'user_id': cur_user.id},
-#        {'$set': {'addition_info': {'name': cur_user.name,
-#                            'age': cur_user.age,
-#                            'sex': cur_user.sex,
-#                            'city': cur_user.city,
-#                            'photo': cur_user.photo,
-#                            'state': cur_user.state
-#                             }
-#                  }
-#         }
-#    )
-#    return user
+def save_music_info(user_id, music):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'addition_info': {'music': music
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_movie_info(user_id, movie):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'addition_info': {'movie': movie
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_sex_info(user_id, sex):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'addition_info': {'sex': sex
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_zodiac_info(user_id, zodiac):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'addition_info': {'zodiac': zodiac
+                                    }
+                  }
+         }
+    )
+    return
+
+
+def save_age_range_info(user_id, age_range):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'addition_info': {'age_range': age_range
+                                    }
+                  }
+         }
+    )
+    return
+
 
 def get_current_state(user_id):
     cur_user = db.users.find_one({'user_id': user_id})
