@@ -37,7 +37,13 @@ def save_user_form(cur_user: user.User()):
                            'sex': cur_user.sex,
                            'city': cur_user.city,
                            'photo': cur_user.photo,
-                           }
+                           },
+                  'addition_info': {'music': None,
+                                    'movie': None,
+                                    'sex': None,
+                                    'zodiac': None,
+                                    'age_range': None
+                                    }
                   }
          }
     )
@@ -47,8 +53,7 @@ def save_user_form(cur_user: user.User()):
 def save_music_info(user_id, music):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'music': music
-                                    }
+        {'$set': {'addition_info.music': music
                   }
          }
     )
@@ -58,8 +63,7 @@ def save_music_info(user_id, music):
 def save_movie_info(user_id, movie):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'movie': movie
-                                    }
+        {'$set': {'addition_info.movie': movie
                   }
          }
     )
@@ -69,8 +73,7 @@ def save_movie_info(user_id, movie):
 def save_sex_info(user_id, sex):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'sex': sex
-                                    }
+        {'$set': {'addition_info.sex': sex
                   }
          }
     )
@@ -80,8 +83,7 @@ def save_sex_info(user_id, sex):
 def save_zodiac_info(user_id, zodiac):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'zodiac': zodiac
-                                    }
+        {'$set': {'addition_info.zodiac': zodiac
                   }
          }
     )
@@ -91,8 +93,7 @@ def save_zodiac_info(user_id, zodiac):
 def save_age_range_info(user_id, age_range):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'addition_info': {'age_range': age_range
-                                    }
+        {'$set': {'addition_info.age_range': age_range
                   }
          }
     )
