@@ -12,6 +12,8 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
+import search_user
+
 greetings = [r'\b[П, п]р.в', r'[Х, х][а, э, е][ю, й]\D*', r'Даров?', r'\D*д.ров?',
              r'\D*дра\D*т?у?те', r'[К, к]у', r'[Й, й]оу', r'[Д, д]обрый день',
              r'[Д, д]оброе утро', r'[Д, д]обрый вечер', r'[П, п]ис', r'\D*[С, с]алам\D*']
@@ -96,6 +98,8 @@ async def base_menu(message: types.Message):
 
 
 async def choose_base_menu(message: types.Message):
+    if message.text == '1':
+        await search_user.regular_search(message)
     if message.text == '3':
         await extra_registration.extra_registration(message)
     else:

@@ -3,6 +3,7 @@ from datetime import datetime
 from config import MONGODB_LINK
 from config import MONGO_DB
 import user
+import random
 
 db = MongoClient(MONGODB_LINK)[MONGO_DB]
 
@@ -105,4 +106,13 @@ def get_current_state(user_id):
 
 
 def set_state(user_id, state_value):
-    db.users.update_one({'user_id': user_id}, {"$set": {'state': state_value}})
+    db.users.update_one({'user_id': user_id}, {'$set': {'state': state_value}})
+
+
+def db_regular_search():
+    #rand = random.random()
+    #random_record = db.users.find_one({'random': {'$gte': rand}})
+    #return random_record
+    #return db.users.random_one()
+
+    return db.users.aggregate([{'$sample': {'size': 1}}]).pretty()
