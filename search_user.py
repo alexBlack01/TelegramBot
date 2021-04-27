@@ -11,8 +11,8 @@ class StageSearch(StatesGroup):
 
 
 async def regular_search(message: types.Message):
-    user = db_users.db_regular_search
-    print(user)
+    users = db_users.get_all_users()
+    print(users)
     print("Сюда заходили")
     await StageSearch.waiting_for_regular_search.set()
 
