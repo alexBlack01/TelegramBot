@@ -135,3 +135,13 @@ def add_user_to_blacklist(user_id, id_form):
          }
     )
     return
+
+
+def delete_user_from_whitelist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$pull': {'whitelist': id_form
+                   }
+         }
+    )
+    return
