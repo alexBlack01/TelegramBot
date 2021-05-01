@@ -115,3 +115,13 @@ def get_all_users():
 
 def get_user_by_criteria(criterion, list_criteria):
     return list(db.users.find({criterion: list_criteria}))
+
+
+def add_user_to_whitelist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'whitelist': id_form
+                  }
+         }
+    )
+    return
