@@ -111,3 +111,7 @@ def set_state(user_id, state_value):
 
 def get_all_users():
     return list(db.users.find())
+
+
+def get_user_by_criteria(criterion, list_criteria):
+    return list(db.users.find({criterion: list_criteria}))
