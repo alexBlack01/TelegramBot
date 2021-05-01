@@ -3,6 +3,7 @@ from datetime import datetime
 from config import MONGODB_LINK
 from config import MONGO_DB
 import user
+import random
 
 db = MongoClient(MONGODB_LINK)[MONGO_DB]
 
@@ -106,4 +107,52 @@ def get_current_state(user_id):
 
 
 def set_state(user_id, state_value):
-    db.users.update_one({'user_id': user_id}, {"$set": {'state': state_value}})
+    db.users.update_one({'user_id': user_id}, {'$set': {'state': state_value}})
+
+
+def get_all_users():
+    return list(db.users.find())
+
+
+def get_user_by_criteria(criterion, list_criteria):
+    return list(db.users.find({criterion: list_criteria}))
+
+
+def add_user_to_whitelist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'whitelist': id_form
+                  }
+         }
+    )
+    return
+
+
+def add_user_to_blacklist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'blacklist': id_form
+                  }
+         }
+    )
+    return
+
+
+def delete_user_from_whitelist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$pull': {'whitelist': id_form
+                   }
+         }
+    )
+    return
+
+
+def delete_user_from_blacklist(user_id, id_form):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$pull': {'blacklist': id_form
+                   }
+         }
+    )
+    return

@@ -6,6 +6,7 @@ import config
 import main
 import registration
 import extra_registration
+import search_user
 
 
 def register_handlers_bot(dp: Dispatcher):
@@ -35,3 +36,4 @@ def register_handlers_bot(dp: Dispatcher):
                                 state=extra_registration.StageExtraRegistration.waiting_for_get_zodiac_info)
     dp.register_message_handler(extra_registration.choose_age_range_info,
                                 state=extra_registration.StageExtraRegistration.waiting_for_get_age_range_info)
+    dp.register_message_handler(search_user.choose_doing, state=search_user.StageSearch.waiting_for_regular_search)
