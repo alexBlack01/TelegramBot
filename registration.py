@@ -1,15 +1,11 @@
-from aiogram import Dispatcher, types, Bot
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import State, StatesGroup
-
 import config
 import db_users
 import main
 import user
 import keyboards
 
-bot = Bot(token=config.TOKEN)
-dp = Dispatcher(bot, storage=MemoryStorage())
+from aiogram import types
+from aiogram.dispatcher.filters.state import State, StatesGroup
 
 user = user.User()
 

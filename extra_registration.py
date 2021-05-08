@@ -1,16 +1,11 @@
-import config
 import keyboards
 import main
 import user
 from emoji import emojize
 import db_users
 
-from aiogram import Dispatcher, types, Bot
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
-
-bot = Bot(token=config.TOKEN)
-dp = Dispatcher(bot, storage=MemoryStorage())
 
 user = user.UserExtra()
 
