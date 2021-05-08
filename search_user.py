@@ -2,7 +2,9 @@ import random
 import config
 import db_users
 import main
+import json
 
+from types import SimpleNamespace
 from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -18,8 +20,9 @@ class StageSearch(StatesGroup):
 
 async def regular_search(message: types.Message):
     users = db_users.get_all_users()
-    user = random.choice(users)
+    data = random.choice(users)
 
+    user = json.loads(data, object_hook = lambda d: SimpleNamespace(**d))
     caption = f'{user.form.name}, {user.form.age}, {user.form.city}'
     await bot.send_photo(message.from_user.id, photo=user.form.photo, caption=caption)
 
