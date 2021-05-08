@@ -22,7 +22,7 @@ async def regular_search(message: types.Message):
     users = db_users.get_all_users()
     data = random.choice(users)
 
-    user = json.loads(data, object_hook=lambda d: SimpleNamespace(**d))
+    user = json.loads(data, object_hook = lambda d: SimpleNamespace(**d))
     caption = f'{user.form.name}, {user.form.age}, {user.form.city}'
     await bot.send_photo(message.from_user.id, photo=user.form.photo, caption=caption)
 
