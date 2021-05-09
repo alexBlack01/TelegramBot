@@ -33,7 +33,7 @@ async def regular_search(message: types.Message):
     user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
     caption = f'{user.form.name}, {user.form.age}, {user.form.city}'
 
-    with open('photos/file_30.jpg', "rb") as file:
+    with open(user.form.photo, "rb") as file:
         data = file.read()
 
     await message.answer_photo(photo=data, caption=caption)

@@ -79,12 +79,9 @@ async def get_city(message: types.Message):
 
 
 async def get_photo(message: types.Message):
-    await message.photo[-1].download()
-    file_name = message.photo[-1].file_unique_id
-    src = file_name
-
-    # src = 'C:\\Users\\asfsa\\Repository\\PI\\TelegramBot\\photos\\' + message.document.file_name
-    user.set_photo(src)
+    file_path = f'photos/{message.from_user.id}_photo.jpg'
+    await message.photo[-1].download(destination=file_path)
+    user.set_photo(file_path)
 
     db_users.save_user_form(user)
     db_users.set_state(user.id, config.S_MENU)
