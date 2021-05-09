@@ -1,3 +1,4 @@
+import random
 import config
 import db_users
 import main
@@ -8,6 +9,7 @@ from bson import ObjectId
 from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
+
 
 bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
