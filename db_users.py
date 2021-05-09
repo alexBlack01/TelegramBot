@@ -111,7 +111,8 @@ def set_state(user_id, state_value):
 
 
 def get_all_users():
-    return list(db.users.find())
+    count = db.users.count()
+    return db.users.find()[random.randrange(count)]
 
 
 def get_user_by_criteria(criterion, list_criteria):

@@ -1,12 +1,13 @@
-import random
 import config
 import db_users
 import main
+import json
 
+from types import SimpleNamespace
+from bson import ObjectId
 from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
-
 
 bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -16,12 +17,20 @@ class StageSearch(StatesGroup):
     waiting_for_regular_search = State()
 
 
-async def regular_search(message: types.Message):
-    users = db_users.get_all_users()
-    user = random.choice(users)
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
+
+async def regular_search(message: types.Message):
+    data = db_users.get_all_users()
+    data_json = JSONEncoder().encode(data)
+
+    user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
     caption = f'{user.form.name}, {user.form.age}, {user.form.city}'
-    await bot.send_photo(message.from_user.id, photo=user.form.photo, caption=caption)
+    await message.reply_photo(photo=user.form.photo, caption=caption)
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.row('1', '2', '3', '4')
