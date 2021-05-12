@@ -5,6 +5,7 @@ import extra_registration
 import handlers
 import keyboards
 import config
+import notifications
 import registration
 import db_users
 
@@ -84,9 +85,11 @@ async def choose_check_resolution(message: types.Message):
 
 
 async def base_menu(message: types.Message):
+    loop = asyncio.get_event_loop()
+    loop.create_task(notifications.long_wait(config.CONST_FOR_LONG_WAIT, message))
+
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for i in range(4):
-        keyboard.row(f'{i + 1}')
+    keyboard.row('1', '2', '3', '4')
 
     await message.answer('Основное меню:\n'
                          '1 - Начать поиск\n'
