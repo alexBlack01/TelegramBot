@@ -50,3 +50,13 @@ keys_movie = [emojize(':ghost:', use_aliases=True),
               emojize(':gun:', use_aliases=True),
               emojize(':baby_bottle:', use_aliases=True),
               emojize(':european_castle:', use_aliases=True)]
+
+keys_solution = [emojize(':thumbsup:', use_aliases=True),
+                 emojize(':thumbsdown:', use_aliases=True),
+                 emojize(':sleeping:', use_aliases=True),
+                 emojize(':gear:', use_aliases=True)]
+
+keys_base_menu = [emojize(':thumbsup:', use_aliases=True),
+                 emojize(':thumbsdown:', use_aliases=True),
+                 emojize(':sleeping:', use_aliases=True),
+                 emojize(':gear:', use_aliases=True)]

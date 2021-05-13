@@ -1,4 +1,5 @@
 from aiogram.dispatcher import FSMContext
+from emoji import emojize
 
 import config
 import db_users
@@ -10,6 +11,7 @@ from bson import ObjectId
 from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from keyboards import keys_solution
 
 storage = MemoryStorage
 
@@ -19,6 +21,7 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 
 class StageSearch(StatesGroup):
     waiting_for_regular_search = State()
+    waiting_for_come_back = State()
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -43,18 +46,19 @@ async def regular_search(message: types.Message):
     await message.answer_photo(photo=data, caption=caption)
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.row('1', '2', '3', '4')
+    keyboard.add(*keys_solution)
 
-    await message.answer('1 - Лайк\n'
-                         '2 - Дизлайк\n'
-                         '3 - Сон\n'
-                         '4 - Изменить параметры', reply_markup=keyboard)
+    await message.answer(emojize(f'{keys_solution[0]} - Лайк\n'
+                                 f'{keys_solution[1]} - Дизлайк\n'
+                                 f'{keys_solution[2]} - Сон\n'
+                                 f'{keys_solution[3]} - Изменить параметры\n', use_aliases=True),
+                         reply_markup=keyboard)
 
     await StageSearch.waiting_for_regular_search.set()
 
 
 async def regular_search_choose(message: types.Message):
-    if message.text == '1':
+    if message.text == keys_solution[0]:
         await message.answer('Реквест отправлен!')
 
         db_users.add_user_to_whitelist(storage.user_id, storage.form_id)
@@ -62,7 +66,7 @@ async def regular_search_choose(message: types.Message):
             db_users.delete_user_from_blacklist(storage.user_id, storage.form_id)
 
         await regular_search(message)
-    if message.text == '2':
+    if message.text == keys_solution[1]:
         await message.answer('Анкета пропущена!')
 
         db_users.add_user_to_blacklist(storage.user_id, storage.form_id)
@@ -70,11 +74,18 @@ async def regular_search_choose(message: types.Message):
             db_users.delete_user_from_whitelist(storage.user_id, storage.form_id)
 
         await regular_search(message)
-    if message.text == '3':
+    if message.text == keys_solution[2]:
         await message.answer('Сон!')
-
-    if message.text == '4':
+        await function_for_wait(message)
+    if message.text == keys_solution[3]:
         await main.base_menu(message)
     else:
         await message.answer('Выбери что-то из предложенного!')
         return
+
+
+async def function_for_wait(message: types.Message):
+    await message.answer(emojize('Я буду ждать тебя! :cry:', use_aliases=True),
+                         reply_markup=types.ReplyKeyboardRemove())
+
+    await StageSearch.waiting_for_come_back.set()
