@@ -66,7 +66,7 @@ async def regular_search_choose(message: types.Message):
             db_users.delete_user_from_blacklist(storage.user_id, storage.form_id)
 
         await regular_search(message)
-    if message.text == keys_solution[1]:
+    elif message.text == keys_solution[1]:
         await message.answer('Анкета пропущена!')
 
         db_users.add_user_to_blacklist(storage.user_id, storage.form_id)
@@ -74,10 +74,9 @@ async def regular_search_choose(message: types.Message):
             db_users.delete_user_from_whitelist(storage.user_id, storage.form_id)
 
         await regular_search(message)
-    if message.text == keys_solution[2]:
-        await message.answer('Сон!')
+    elif message.text == keys_solution[2]:
         await function_for_wait(message)
-    if message.text == keys_solution[3]:
+    elif message.text == keys_solution[3]:
         await main.base_menu(message)
     else:
         await message.answer('Выбери что-то из предложенного!')
