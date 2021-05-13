@@ -169,3 +169,8 @@ def delete_user_from_blacklist(user_id, id_form):
          }
     )
     return
+
+
+def delete_user(user_id):
+    db.user.remove({'user_id': user_id})
+    return
