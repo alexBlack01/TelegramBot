@@ -58,17 +58,21 @@ async def regular_search_choose(message: types.Message):
         await message.answer('Реквест отправлен!')
 
         db_users.add_user_to_whitelist(storage.user_id, storage.form_id)
+        if db_users.check_user_in_list('blacklist', storage.user_id, storage.form_id):
+            db_users.delete_user_from_blacklist(storage.user_id, storage.form_id)
 
         await regular_search(message)
     if message.text == '2':
         await message.answer('Анкета пропущена!')
 
         db_users.add_user_to_blacklist(storage.user_id, storage.form_id)
+        if db_users.check_user_in_list('whitelist', storage.user_id, storage.form_id):
+            db_users.delete_user_from_whitelist(storage.user_id, storage.form_id)
 
         await regular_search(message)
     if message.text == '3':
         await message.answer('Сон!')
-        await regular_search(message)
+
     if message.text == '4':
         await main.base_menu(message)
     else:

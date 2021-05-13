@@ -140,6 +140,17 @@ def add_user_to_blacklist(user_id, id_form):
     return
 
 
+def check_user_in_list(list_name, user_id, form_id):
+    cur_val = db.users.find_one(
+        {'user_id': user_id},
+        {list_name: form_id}
+    )
+    if cur_val is None:
+        return False
+    else:
+        return True
+
+
 def delete_user_from_whitelist(user_id, id_form):
     db.users.update_one(
         {'user_id': user_id},
