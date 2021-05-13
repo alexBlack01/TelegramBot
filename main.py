@@ -7,6 +7,7 @@ import config
 import notifications
 import registration
 import db_users
+import remove_user
 import search_user
 
 from emoji import emojize
@@ -105,6 +106,8 @@ async def choose_base_menu(message: types.Message):
         await search_user.regular_search(message)
     elif message.text == keyboards.keys_base_menu[2]:
         await extra_registration.extra_registration(message)
+    elif message.text == keyboards.keys_base_menu[3]:
+        await remove_user.remove_user(message)
     else:
         await message.answer('Остальные функции пока что не готовы!')
         return
