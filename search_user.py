@@ -27,7 +27,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 async def regular_search(message: types.Message):
-    data = db_users.get_all_users()
+    data = db_users.get_user_for_regular_search(message.from_user.id)
     data_json = JSONEncoder().encode(data)
 
     user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))

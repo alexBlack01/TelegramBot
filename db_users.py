@@ -110,9 +110,10 @@ def set_state(user_id, state_value):
     db.users.update_one({'user_id': user_id}, {'$set': {'state': state_value}})
 
 
-def get_all_users():
+def get_user_for_regular_search(user_id):
     count = db.users.count()
-    return db.users.find()[random.randrange(count)]
+    user_var = db.users.find({'user_id': {'$ne': user_id}})[random.randrange(count - 1)]
+    return user_var
 
 
 def get_user_by_criteria(criterion, list_criteria):
