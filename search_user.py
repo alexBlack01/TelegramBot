@@ -1,26 +1,20 @@
 import asyncio
-
-from aiogram.dispatcher import FSMContext
-from emoji import emojize
-
-import config
 import db_users
 import main
 import json
 
 from types import SimpleNamespace
 from bson import ObjectId
-from aiogram import types, Bot, Dispatcher
+from emoji import emojize
+from aiogram import types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 import queue_with_requests
 from keyboards import keys_solution
 
-storage = MemoryStorage
-
-bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
-dp = Dispatcher(bot, storage=MemoryStorage())
+storage = MemoryStorage()
+loop_queue = asyncio.get_event_loop()
 
 
 class StageSearch(StatesGroup):
@@ -35,10 +29,12 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-async def regular_search(message: types.Message):
-    loop_queue = asyncio.get_event_loop()
+async def create_search_flow(message: types.Message):
     loop_queue.create_task(queue_with_requests.work_with_queue(message))
+    await regular_search(message)
 
+
+async def regular_search(message: types.Message):
     data = db_users.get_user_for_regular_search(message.from_user.id)
     data_json = JSONEncoder().encode(data)
 
@@ -60,7 +56,6 @@ async def regular_search(message: types.Message):
                                  f'{keys_solution[2]} - Сон\n'
                                  f'{keys_solution[3]} - Изменить параметры\n', use_aliases=True),
                          reply_markup=keyboard)
-
     await StageSearch.waiting_for_regular_search.set()
 
 
@@ -83,8 +78,11 @@ async def regular_search_choose(message: types.Message):
         await regular_search(message)
     elif message.text == keys_solution[2]:
         await function_for_wait(message)
+
     elif message.text == keys_solution[3]:
+        loop_queue.stop()
         await main.base_menu(message)
+
     else:
         await message.answer('Выбери что-то из предложенного!')
         return

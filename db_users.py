@@ -180,9 +180,40 @@ def check_queue(user_id):
     count = db.users.find(
         {'user_id': user_id},
         {'queue'}
-         ).count()
+    ).count()
 
     if count == 0:
         return False
     else:
         return True
+
+
+def get_queue(user_id):
+    queue = db.users.find(
+        {'user_id': user_id},
+        {'queue'})
+    return queue
+
+
+def get_user_by_id(user_id):
+    return db.users.find({'user_id': user_id})
+
+
+def add_user_id_in_queue(user_id, form_id):
+    db.users.update_one(
+        {'user_id': form_id},
+        {'$addToSet': {'queue': user_id
+                       }
+         }
+    )
+    return
+
+
+def delete_user_id_from_queue(user_id, form_id):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$pull': {'queue': form_id
+                       }
+         }
+    )
+    return

@@ -84,10 +84,13 @@ async def choose_check_resolution(message: types.Message):
         return
 
 
-async def base_menu(message: types.Message):
+async def create_notifications(message: types.Message):
     loop = asyncio.get_event_loop()
     loop.create_task(notifications.long_wait(config.CONST_FOR_LONG_WAIT, message))
+    await base_menu(message)
 
+
+async def base_menu(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*keyboards.keys_base_menu)
 
@@ -103,11 +106,14 @@ async def base_menu(message: types.Message):
 
 async def choose_base_menu(message: types.Message):
     if message.text == keyboards.keys_base_menu[0]:
-        await search_user.regular_search(message)
+        await search_user.create_search_flow(message)
+
     elif message.text == keyboards.keys_base_menu[2]:
         await extra_registration.extra_registration(message)
+
     elif message.text == keyboards.keys_base_menu[3]:
         await remove_user.remove_user(message)
+
     else:
         await message.answer('Остальные функции пока что не готовы!')
         return

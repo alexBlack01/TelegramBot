@@ -1,12 +1,10 @@
-from emoji import emojize
-
 import db_users
 import keyboards
+import main
 
+from emoji import emojize
 from aiogram import types
 from aiogram.dispatcher.filters.state import StatesGroup, State
-
-import main
 
 
 class StageRemove(StatesGroup):

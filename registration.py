@@ -96,4 +96,4 @@ async def say_info(message: types.Message):
                          'Это можно сделать в любое время, когда тебе удобно.\n'
                          'Пока что тебе будет доступен просмотр всех анкет.')
 
-    await main.base_menu(message)
+    await main.create_notifications(message)
