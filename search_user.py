@@ -63,6 +63,7 @@ async def regular_search_choose(message: types.Message):
     if message.text == keys_solution[0]:
         await message.answer('Реквест отправлен!')
 
+        db_users.add_user_id_in_queue(storage.user_id, storage.form_id)
         db_users.add_user_to_whitelist(storage.user_id, storage.form_id)
         if db_users.check_user_in_list('blacklist', storage.user_id, storage.form_id):
             db_users.delete_user_from_blacklist(storage.user_id, storage.form_id)

@@ -1,4 +1,5 @@
 import json
+import config
 import db_users
 import keyboards
 import search_user
@@ -6,11 +7,14 @@ import search_user
 from emoji import emojize
 from types import SimpleNamespace
 from bson import ObjectId
-from aiogram import types
+from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 storage = MemoryStorage()
+
+bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
+dp = Dispatcher(bot, storage=MemoryStorage())
 
 
 class StageQueue(StatesGroup):
@@ -81,8 +85,15 @@ async def watching_queue(message: types.Message):
 
 async def regular_search_choose(message: types.Message):
     if message.text == keyboards.keys_solution[0]:
-        await message.sender_chat
-        await message.answer('Приятного общения!')
+        data = db_users.get_username(message.from_user.id)
+        data_json = JSONEncoder().encode(data)
+        user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
+        await bot.send_message(storage.form_id, f'{user.username} Приятного общения!')
+
+        data = db_users.get_username(storage.form_id)
+        data_json = JSONEncoder().encode(data)
+        user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
+        await message.answer(f'{user.username} Приятного общения!')
 
         db_users.delete_user_id_from_queue(storage.user_id, storage.form_id)
         db_users.add_user_to_whitelist(storage.user_id, storage.form_id)

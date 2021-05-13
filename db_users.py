@@ -213,7 +213,11 @@ def delete_user_id_from_queue(user_id, form_id):
     db.users.update_one(
         {'user_id': user_id},
         {'$pull': {'queue': form_id
-                       }
+                   }
          }
     )
     return
+
+
+def get_username(user_id):
+    return db.users.find({'user_id': user_id})
