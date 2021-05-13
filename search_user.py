@@ -1,4 +1,5 @@
-import random
+from aiogram.dispatcher import FSMContext
+
 import config
 import db_users
 import main
@@ -10,6 +11,7 @@ from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
+storage = MemoryStorage
 
 bot = Bot(token=config.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -32,7 +34,8 @@ async def regular_search(message: types.Message):
 
     user = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
     caption = f'{user.form.name}, {user.form.age}, {user.form.city}'
-    message.text = user.user_id
+    storage.user_id = message.from_user.id
+    storage.form_id = user.user_id
 
     with open(user.form.photo, "rb") as file:
         data = file.read()
@@ -54,13 +57,13 @@ async def regular_search_choose(message: types.Message):
     if message.text == '1':
         await message.answer('Реквест отправлен!')
 
-        db_users.add_user_to_whitelist(message.from_user.id, message.text)
+        db_users.add_user_to_whitelist(storage.user_id, storage.form_id)
 
         await regular_search(message)
     if message.text == '2':
         await message.answer('Анкета пропущена!')
 
-        db_users.add_user_to_blacklist(message.from_user.id, message.text)
+        db_users.add_user_to_blacklist(storage.user_id, storage.form_id)
 
         await regular_search(message)
     if message.text == '3':
