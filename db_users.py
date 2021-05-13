@@ -174,3 +174,15 @@ def delete_user_from_blacklist(user_id, id_form):
 def delete_user(user_id):
     db.user.remove({'user_id': user_id})
     return
+
+
+def check_queue(user_id):
+    count = db.users.find(
+        {'user_id': user_id},
+        {'queue'}
+         ).count()
+
+    if count == 0:
+        return False
+    else:
+        return True

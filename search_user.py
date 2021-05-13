@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram.dispatcher import FSMContext
 from emoji import emojize
 
@@ -11,6 +13,8 @@ from bson import ObjectId
 from aiogram import types, Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
+
+import queue_with_requests
 from keyboards import keys_solution
 
 storage = MemoryStorage
@@ -32,6 +36,9 @@ class JSONEncoder(json.JSONEncoder):
 
 
 async def regular_search(message: types.Message):
+    loop_queue = asyncio.get_event_loop()
+    loop_queue.create_task(queue_with_requests.work_with_queue(message))
+
     data = db_users.get_user_for_regular_search(message.from_user.id)
     data_json = JSONEncoder().encode(data)
 
