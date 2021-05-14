@@ -110,9 +110,10 @@ def set_state(user_id, state_value):
     db.users.update_one({'user_id': user_id}, {'$set': {'state': state_value}})
 
 
-def get_all_users():
+def get_user_for_regular_search(user_id):
     count = db.users.count()
-    return db.users.find()[random.randrange(count)]
+    user_var = db.users.find({'user_id': {'$ne': user_id}})[random.randrange(count - 1)]
+    return user_var
 
 
 def get_user_by_criteria(criterion, list_criteria):
@@ -122,8 +123,8 @@ def get_user_by_criteria(criterion, list_criteria):
 def add_user_to_whitelist(user_id, id_form):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'whitelist': id_form
-                  }
+        {'$addToSet': {'whitelist': id_form
+                       }
          }
     )
     return
@@ -132,11 +133,22 @@ def add_user_to_whitelist(user_id, id_form):
 def add_user_to_blacklist(user_id, id_form):
     db.users.update_one(
         {'user_id': user_id},
-        {'$set': {'blacklist': id_form
-                  }
+        {'$addToSet': {'blacklist': id_form
+                       }
          }
     )
     return
+
+
+def check_user_in_list(list_name, user_id, form_id):
+    cur_val = db.users.find_one(
+        {'user_id': user_id},
+        {list_name: form_id}
+    )
+    if cur_val is None:
+        return False
+    else:
+        return True
 
 
 def delete_user_from_whitelist(user_id, id_form):
@@ -157,3 +169,55 @@ def delete_user_from_blacklist(user_id, id_form):
          }
     )
     return
+
+
+def delete_user(user_id):
+    db.user.remove({'user_id': user_id})
+    return
+
+
+def check_queue(user_id):
+    count = db.users.find(
+        {'user_id': user_id},
+        {'queue'}
+    ).count()
+
+    if count == 0:
+        return False
+    else:
+        return True
+
+
+def get_queue(user_id):
+    queue = db.users.find(
+        {'user_id': user_id},
+        {'queue'})
+    return queue
+
+
+def get_user_by_id(user_id):
+    return db.users.find({'user_id': user_id})
+
+
+def add_user_id_in_queue(user_id, form_id):
+    db.users.update_one(
+        {'user_id': form_id},
+        {'$addToSet': {'queue': user_id
+                       }
+         }
+    )
+    return
+
+
+def delete_user_id_from_queue(user_id, form_id):
+    db.users.update_one(
+        {'user_id': user_id},
+        {'$pull': {'queue': form_id
+                   }
+         }
+    )
+    return
+
+
+def get_username(user_id):
+    return db.users.find({'user_id': user_id})

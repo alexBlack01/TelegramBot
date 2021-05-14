@@ -3,6 +3,7 @@ from aiogram import Dispatcher, types
 import main
 import registration
 import extra_registration
+import remove_user
 import search_user
 
 
@@ -33,4 +34,7 @@ def register_handlers_bot(dp: Dispatcher):
                                 state=extra_registration.StageExtraRegistration.waiting_for_get_zodiac_info)
     dp.register_message_handler(extra_registration.choose_age_range_info,
                                 state=extra_registration.StageExtraRegistration.waiting_for_get_age_range_info)
-    dp.register_message_handler(search_user.regular_search_choose, state=search_user.StageSearch.waiting_for_regular_search)
+    dp.register_message_handler(search_user.regular_search_choose,
+                                state=search_user.StageSearch.waiting_for_regular_search)
+    dp.register_message_handler(main.base_menu, state=search_user.StageSearch.waiting_for_come_back)
+    dp.register_message_handler(remove_user.choose_remove_user, state=remove_user.StageRemove.waiting_for_remove)

@@ -1,6 +1,4 @@
-import yes as yes
 from emoji import emojize
-from typing import NamedTuple
 
 keys_for_resolution = [emojize(':white_check_mark:', use_aliases=True),
                        emojize(':no_entry_sign:', use_aliases=True)]
@@ -50,3 +48,13 @@ keys_movie = [emojize(':ghost:', use_aliases=True),
               emojize(':gun:', use_aliases=True),
               emojize(':baby_bottle:', use_aliases=True),
               emojize(':european_castle:', use_aliases=True)]
+
+keys_solution = [emojize(':thumbsup:', use_aliases=True),
+                 emojize(':thumbsdown:', use_aliases=True),
+                 emojize(':sleeping:', use_aliases=True),
+                 emojize(':gear:', use_aliases=True)]
+
+keys_base_menu = [emojize(':mag:', use_aliases=True),
+                  emojize(':arrow_up_down:', use_aliases=True),
+                  emojize(':book:', use_aliases=True),
+                  emojize(':x:', use_aliases=True)]

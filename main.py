@@ -1,18 +1,19 @@
 import asyncio
 import re
-
 import extra_registration
 import handlers
 import keyboards
 import config
+import notifications
 import registration
 import db_users
+import remove_user
+import search_user
 
+from emoji import emojize
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
-
-import search_user
 
 greetings = [r'\b[П, п]р.в', r'[Х, х][а, э, е][ю, й]\D*', r'Даров?', r'\D*д.ров?',
              r'\D*дра\D*т?у?те', r'[К, к]у', r'[Й, й]оу', r'[Д, д]обрый день',
@@ -83,25 +84,36 @@ async def choose_check_resolution(message: types.Message):
         return
 
 
+async def create_notifications(message: types.Message):
+    loop = asyncio.get_event_loop()
+    loop.create_task(notifications.long_wait(config.CONST_FOR_LONG_WAIT, message))
+    await base_menu(message)
+
+
 async def base_menu(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for i in range(4):
-        keyboard.row(f'{i + 1}')
+    keyboard.add(*keyboards.keys_base_menu)
 
-    await message.answer('Основное меню:\n'
-                         '1 - Начать поиск\n'
-                         '2 - Выбрать поиск\n'
-                         '3 - Пройти дополнительную регистрацию\n'
-                         '4 - Удалить анкету\n', reply_markup=keyboard)
+    await message.answer(emojize('Меню:\n'
+                                 f'{keyboards.keys_base_menu[0]} - Начать поиск\n'
+                                 f'{keyboards.keys_base_menu[1]} - Выбрать поиск\n'
+                                 f'{keyboards.keys_base_menu[2]} - Пройти дополнительную регистрацию\n'
+                                 f'{keyboards.keys_base_menu[3]} - Удалить анкету\n', use_aliases=True),
+                         reply_markup=keyboard)
 
     await StageBot.waiting_for_base_menu.set()
 
 
 async def choose_base_menu(message: types.Message):
-    if message.text == '1':
-        await search_user.regular_search(message)
-    if message.text == '3':
+    if message.text == keyboards.keys_base_menu[0]:
+        await search_user.create_search_flow(message)
+
+    elif message.text == keyboards.keys_base_menu[2]:
         await extra_registration.extra_registration(message)
+
+    elif message.text == keyboards.keys_base_menu[3]:
+        await remove_user.remove_user(message)
+
     else:
         await message.answer('Остальные функции пока что не готовы!')
         return
